@@ -53,9 +53,10 @@ public class CubeExplosionManager : MonoBehaviour
 
     private void ExplodeCube(GameObject cube)
     {
-        if (IsSpawnCubes() == true)
+        if (IsShouldSpawnCubes() == true)
         {
             CreateNewCubes(cube);
+            _currentSpawnChance/=_differenceScaleCubes;
         }
 
         foreach(Rigidbody explodableObject in GetExplodableObjects(cube))
@@ -94,20 +95,8 @@ public class CubeExplosionManager : MonoBehaviour
         return cubes;
     }
 
-    private bool IsSpawnCubes()
+    private bool IsShouldSpawnCubes()
     {
-        bool isSpawnCubes;
-
-        if (Random.Range(0, _maxSpawnChance) <= _currentSpawnChance)
-        {
-            isSpawnCubes = true;
-            _currentSpawnChance/= _reducingSpawnChance;
-        }
-        else
-        {
-            isSpawnCubes = false;
-        }
-
-        return isSpawnCubes;
+        return (Random.Range(0, _maxSpawnChance) <= _currentSpawnChance);
     }
 }
