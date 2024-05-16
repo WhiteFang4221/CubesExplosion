@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(Camera))]
 public class CubeSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject _cubePrefab;
     
-    public Action<ExplosiveCube, List<Rigidbody>> NewCubesSpawned;
+    public event Action<ExplosiveCube, List<Rigidbody>> NewCubesSpawned;
 
     private Camera _camera;
     private int _minCubes = 2;
