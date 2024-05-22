@@ -31,7 +31,6 @@ public class CubeSpawner : MonoBehaviour
     {
         int numberCubes = Random.Range(_minCubes, _maxCubes);
         List<Rigidbody> cubes = new List<Rigidbody>();
-        splitChance /= _reducingSpawnChance;
 
         for(int i = 1; i <= numberCubes; i++)
         {
