@@ -10,12 +10,12 @@ public class CubeSpawner : MonoBehaviour
     [SerializeField] private CubeSearcher _cubeSearcher;
    
     public event Action<ExplosiveCube, List<Rigidbody>> NewCubesSpawned;
+    public event Action<ExplosiveCube> CubeDisappeared;
 
     private int _minCubes = 2;
     private int _maxCubes = 7;
     private float _differenceScaleCubes = 2;
     private float _maxSplitChance = 101;
-    private int _reducingSpawnChance = 2;
 
     private void OnEnable()
     {
@@ -30,7 +30,7 @@ public class CubeSpawner : MonoBehaviour
     private void CreateNewCubes(ExplosiveCube explosiveCube, float splitChance)
     {
         int numberCubes = Random.Range(_minCubes, _maxCubes);
-        List<Rigidbody> cubes = new List<Rigidbody>();
+        List<Rigidbody> cubes = new();
 
         for(int i = 1; i <= numberCubes; i++)
         {
@@ -49,9 +49,15 @@ public class CubeSpawner : MonoBehaviour
 
     private void TrySpawnCubes(ExplosiveCube explosiveCube)
     {
-        if(Random.Range(0, _maxSplitChance) <= explosiveCube.SplitChance)
+        if (Random.Range(0, _maxSplitChance) <= explosiveCube.SplitChance)
         {
             CreateNewCubes(explosiveCube, explosiveCube.SplitChance);
-        }    
+        }
+        else
+        {
+            CubeDisappeared?.Invoke(explosiveCube);
+        }
     }
+
+
 }

@@ -11,6 +11,6 @@ public class ExplosiveCube : MonoBehaviour
     public void InitializeSplitChance(float chanceDivide)
     {
 
-        SplitChance = chanceDivide / 2;
+        SplitChance = chanceDivide / _reducingSplitChance;
     }
 }
