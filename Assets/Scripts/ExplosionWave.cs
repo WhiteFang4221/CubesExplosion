@@ -9,42 +9,44 @@ public class ExplosionWave : MonoBehaviour
 
     private void OnEnable()
     {
-        _cubeSpawner.NewCubesSpawned += ExplodeCube;
-        _cubeSpawner.CubeDisappeared += PushObjects;
+        _cubeSpawner.NewCubesSpawned += PushNewCubes;
+        _cubeSpawner.CubeDisappeared += PushAllCubes;
     }
 
     private void OnDisable()
     {
-        _cubeSpawner.NewCubesSpawned -= ExplodeCube;
-        _cubeSpawner.CubeDisappeared -= PushObjects;
+        _cubeSpawner.NewCubesSpawned -= PushNewCubes;
+        _cubeSpawner.CubeDisappeared -= PushAllCubes;
     }
 
-    private void ExplodeCube(ExplosiveCube explosiveCube, List<Rigidbody> newCubes)
+    private void PushNewCubes(ExplosiveCube explosiveCube, List<Rigidbody> newCubes)
+    {
+        foreach (Rigidbody cube in newCubes)
+        {
+            cube.AddExplosionForce(_basedExplosionForce, explosiveCube.transform.position, _basedExplosionRadius);
+        }
+    }
+
+    private void PushAllCubes(ExplosiveCube explosiveCube)
     {
         float scale = explosiveCube.transform.localScale.magnitude;
         float ExplosionForce = _basedExplosionForce / scale;
         float ExplosionRadius = _basedExplosionRadius / scale;
 
-        foreach (Rigidbody cube in newCubes)
-        {
-            cube.AddExplosionForce(ExplosionForce, explosiveCube.transform.position, ExplosionRadius);
-        }
-    }
-
-    private void PushObjects(ExplosiveCube explosiveCube)
-    {
         Collider[] hits = Physics.OverlapSphere(explosiveCube.transform.position, _basedExplosionRadius);
-
-        List<Rigidbody> objects = new List<Rigidbody>();
+        List<Rigidbody> cubes = new List<Rigidbody>();
 
         foreach (Collider hit in hits)
         {
             if (hit.attachedRigidbody != null)
             {
-                objects.Add(hit.attachedRigidbody);
+                cubes.Add(hit.attachedRigidbody);
             }
         }
 
-        ExplodeCube(explosiveCube, objects);
+        foreach (Rigidbody cube in cubes)
+        {
+            cube.AddExplosionForce(ExplosionForce, explosiveCube.transform.position, ExplosionRadius);
+        }
     }
 }
