@@ -58,6 +58,4 @@ public class CubeSpawner : MonoBehaviour
             CubeDisappeared?.Invoke(explosiveCube);
         }
     }
-
-
 }
