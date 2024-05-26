@@ -4,10 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CubeSearcher : MonoBehaviour
 {
-    public event Action<ExplosiveCube> CubeFounded;
-    
     private Camera _camera;
 
+    public event Action<ExplosiveCube> CubeFounded;
+    
     private void Start()
     {
         _camera = GetComponent<Camera>();
@@ -29,11 +29,11 @@ public class CubeSearcher : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
            if (hit.collider.TryGetComponent(out ExplosiveCube explosiveCube))
-            {
+           {
                 CubeFounded?.Invoke(explosiveCube);
                 Debug.Log(explosiveCube.SplitChance);
                 Destroy(explosiveCube.gameObject);
-            }
+           }
         }
     }
 }

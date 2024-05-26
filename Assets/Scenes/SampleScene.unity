@@ -683,8 +683,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11c9741055d9d345ab441a1853deed1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explosionRadius: 6
-  _explosionForce: 100
+  _basedExplosionRadius: 6
+  _basedExplosionForce: 300
   _cubeSpawner: {fileID: 963194229}
 --- !u!114 &963194231
 MonoBehaviour:
