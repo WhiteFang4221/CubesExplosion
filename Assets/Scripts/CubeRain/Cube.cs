@@ -15,7 +15,7 @@ public class Cube : MonoBehaviour
 
     public void Initialize(CubePooler pooler)
     {
-        this._cubePooler = pooler;
+        _cubePooler = pooler;
     }
 
     private void Start()
@@ -40,9 +40,8 @@ public class Cube : MonoBehaviour
         float randomLifetime = Random.Range(_minLifeTime, _maxLifeTime);
         yield return new WaitForSeconds(randomLifetime);
 
-        _cubePooler.CubePool.Release(gameObject);
+        _cubePooler.CubePool.Release(this);
         _cubeRenderComponent.material.color = Color.white;
         _isPlatformTouch = false;
-
     }
 }

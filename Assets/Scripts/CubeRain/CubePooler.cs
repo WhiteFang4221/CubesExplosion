@@ -3,29 +3,28 @@ using UnityEngine.Pool;
 
 public class CubePooler : MonoBehaviour
 {
-    [SerializeField] private GameObject _cubePrefab;
+    [SerializeField] private Cube _cubePrefab;
     [SerializeField] private Transform _parentTransform;
     [SerializeField] private int _poolCapacity = 1;
     [SerializeField] private int _poolMaxSize = 10;
 
-
-    public ObjectPool<GameObject> CubePool;
+    public ObjectPool<Cube> CubePool;
 
     private void Awake()
     {
-        CubePool = new ObjectPool<GameObject>(
-            createFunc: () => CreateCube(),
-            actionOnGet: (cube) => ActionOnGet(cube),
-            actionOnRelease: (cube) => cube.SetActive(false),
-            actionOnDestroy: (cube) => Destroy(cube),
+        CubePool = new ObjectPool<Cube>(
+            createFunc: CreateCube,
+            actionOnGet:  ActionOnGet,
+            actionOnRelease: (cube) => cube.gameObject.SetActive(false),
+            actionOnDestroy: Destroy,
             collectionCheck: true,
             defaultCapacity: _poolCapacity,
             maxSize: _poolMaxSize);
     }
 
-    private GameObject CreateCube()
+    private Cube CreateCube()
     {
-        GameObject cube = Instantiate(_cubePrefab, _parentTransform);
+        Cube cube = Instantiate(_cubePrefab, _parentTransform);
 
         if (cube.TryGetComponent(out Cube cubeComponent))
         {
@@ -35,9 +34,9 @@ public class CubePooler : MonoBehaviour
         return cube;
     }
 
-    private void ActionOnGet(GameObject cube)
+    private void ActionOnGet(Cube cube)
     {
-        cube.SetActive(true);
+        cube.gameObject.SetActive(true);
         cube.TryGetComponent(out Rigidbody rb);
         rb.velocity = Vector3.zero;
     }

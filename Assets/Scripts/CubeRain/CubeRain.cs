@@ -8,7 +8,6 @@ public class CubeRain : MonoBehaviour
     [SerializeField] private Cube _cube;
     
     private Coroutine _spawnCoroutine;
-
     private BoxCollider _spawnArea;
     private WaitForSeconds _spawnDelay = new WaitForSeconds(1f);
 
@@ -33,7 +32,7 @@ public class CubeRain : MonoBehaviour
     }
 
 
-    IEnumerator SpawnCubes()
+    private IEnumerator SpawnCubes()
     {
         while (true)
         {
@@ -44,7 +43,7 @@ public class CubeRain : MonoBehaviour
             float randomZ = Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2);
             Vector3 spawnPosition = spawnAreaCenter + new Vector3(randomX, 0, randomZ);
 
-            GameObject cube = _cubePooler.CubePool.Get();
+            Cube cube = _cubePooler.CubePool.Get();
             cube.transform.position = spawnPosition;
 
             yield return _spawnDelay;
