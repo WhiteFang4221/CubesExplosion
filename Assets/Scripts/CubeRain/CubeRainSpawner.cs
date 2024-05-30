@@ -9,7 +9,7 @@ public class CubeRainSpawner : MonoBehaviour
     
     private WaitForSeconds _spawnDelay = new WaitForSeconds(1f);
     private BoxCollider _spawnArea;
-    private float _dividerSpawnArea = 2;
+    private float _dividerSpawnArea = 2f;
 
     private void Start()
     {

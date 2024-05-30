@@ -98,9 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f27a9355c65464b4fa8e2509ba41bb1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _platformLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  _renderComponent: {fileID: 8487607609313015472}
+  _rigidbody: {fileID: 5640638503520642847}
 --- !u!65 &9075957219970564480
 BoxCollider:
   m_ObjectHideFlags: 0

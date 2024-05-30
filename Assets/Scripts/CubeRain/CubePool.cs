@@ -39,6 +39,5 @@ public class CubePool : MonoBehaviour
     private void PullOut(Cube cube)
     {
         cube.gameObject.SetActive(true);
-        cube.Rigidbody.velocity = Vector3.zero;
     }
 }

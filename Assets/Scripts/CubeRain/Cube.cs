@@ -5,18 +5,17 @@ using UnityEngine;
 [RequireComponent (typeof(Rigidbody))]
 public class Cube : MonoBehaviour
 {
-    private Renderer _renderComponent;
+    [SerializeField] private Renderer _renderComponent;
+    [SerializeField] private Rigidbody _rigidbody;
+
     private CubePool _cubePooler;
     private float _minLifeTime = 2f;
     private float _maxLifeTime = 6f;
     private bool _isPlatformTouch = false;
-    
-    public Rigidbody Rigidbody { get; private set; }
 
-    private void Start()
+    private void OnEnable()
     {
-        _renderComponent = GetComponent<Renderer>();
-        Rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.velocity = Vector3.zero;
     }
 
     private void OnCollisionEnter(Collision collision)
