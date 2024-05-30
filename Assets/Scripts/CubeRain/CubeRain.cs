@@ -4,10 +4,9 @@ using UnityEngine;
 [RequireComponent (typeof(BoxCollider))]
 public class CubeRain : MonoBehaviour
 {
-    [SerializeField] private CubePooler _cubePooler;
+    [SerializeField] private CubePool _cubePooler;
     [SerializeField] private Cube _cube;
     
-    private Coroutine _spawnCoroutine;
     private BoxCollider _spawnArea;
     private WaitForSeconds _spawnDelay = new WaitForSeconds(1f);
 
@@ -20,17 +19,8 @@ public class CubeRain : MonoBehaviour
             _spawnArea.isTrigger = true;
         }
 
-       _spawnCoroutine = StartCoroutine(SpawnCubes());
+        StartCoroutine(SpawnCubes());
     }
-
-    private void OnDisable()
-    {
-        if (_spawnCoroutine != null)
-        {
-            StopCoroutine(_spawnCoroutine);
-        }
-    }
-
 
     private IEnumerator SpawnCubes()
     {
@@ -43,7 +33,7 @@ public class CubeRain : MonoBehaviour
             float randomZ = Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2);
             Vector3 spawnPosition = spawnAreaCenter + new Vector3(randomX, 0, randomZ);
 
-            Cube cube = _cubePooler.CubePool.Get();
+            Cube cube = _cubePooler.ReturnCubePool().Get();
             cube.transform.position = spawnPosition;
 
             yield return _spawnDelay;

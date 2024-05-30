@@ -805,7 +805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75c4c2d6250cac64baf8b6826388aa25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cubePrefab: {fileID: 2074313050249006099, guid: d13012fd0fd3b7e4885c78d6a23799a8, type: 3}
+  _cubePrefab: {fileID: 7584740186773087789, guid: d13012fd0fd3b7e4885c78d6a23799a8, type: 3}
   _parentTransform: {fileID: 1245759597}
   _poolCapacity: 5
   _poolMaxSize: 10

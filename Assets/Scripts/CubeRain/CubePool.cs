@@ -1,25 +1,30 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CubePooler : MonoBehaviour
+public class CubePool : MonoBehaviour
 {
     [SerializeField] private Cube _cubePrefab;
     [SerializeField] private Transform _parentTransform;
     [SerializeField] private int _poolCapacity = 1;
     [SerializeField] private int _poolMaxSize = 10;
 
-    public ObjectPool<Cube> CubePool;
+    private ObjectPool<Cube> _cubePool;
 
     private void Awake()
     {
-        CubePool = new ObjectPool<Cube>(
+        _cubePool = new ObjectPool<Cube>(
             createFunc: CreateCube,
-            actionOnGet:  ActionOnGet,
+            actionOnGet:  PullOut,
             actionOnRelease: (cube) => cube.gameObject.SetActive(false),
             actionOnDestroy: Destroy,
             collectionCheck: true,
             defaultCapacity: _poolCapacity,
             maxSize: _poolMaxSize);
+    }
+
+    public ObjectPool<Cube> ReturnCubePool()
+    {
+        return _cubePool;
     }
 
     private Cube CreateCube()
@@ -34,10 +39,13 @@ public class CubePooler : MonoBehaviour
         return cube;
     }
 
-    private void ActionOnGet(Cube cube)
+    private void PullOut(Cube cube)
     {
         cube.gameObject.SetActive(true);
-        cube.TryGetComponent(out Rigidbody rb);
-        rb.velocity = Vector3.zero;
+
+        if (cube.TryGetComponent(out Rigidbody rigidbody))
+        {
+            rigidbody.velocity = Vector3.zero;
+        }
     }
 }
