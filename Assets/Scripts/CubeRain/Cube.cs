@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer))]
+[RequireComponent (typeof(Rigidbody))]
 public class Cube : MonoBehaviour
 {
     private Renderer _renderComponent;
@@ -9,15 +10,13 @@ public class Cube : MonoBehaviour
     private float _minLifeTime = 2f;
     private float _maxLifeTime = 6f;
     private bool _isPlatformTouch = false;
-
-    public void Initialize(CubePool pooler)
-    {
-        _cubePooler = pooler;
-    }
+    
+    public Rigidbody Rigidbody { get; private set; }
 
     private void Start()
     {
         _renderComponent = GetComponent<Renderer>();
+        Rigidbody = GetComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -28,6 +27,11 @@ public class Cube : MonoBehaviour
             StartCoroutine(DestroyAfterDelay());
             _isPlatformTouch = true;
         }
+    }
+
+    public void Initialize(CubePool pooler)
+    {
+        _cubePooler = pooler;
     }
 
     private IEnumerator DestroyAfterDelay()

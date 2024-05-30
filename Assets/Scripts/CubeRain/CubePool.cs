@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
+
 public class CubePool : MonoBehaviour
 {
     [SerializeField] private Cube _cubePrefab;
@@ -30,11 +31,7 @@ public class CubePool : MonoBehaviour
     private Cube CreateCube()
     {
         Cube cube = Instantiate(_cubePrefab, _parentTransform);
-
-        if (cube.TryGetComponent(out Cube cubeComponent))
-        {
-            cubeComponent.Initialize(this);
-        }
+        cube.Initialize(this);
 
         return cube;
     }
@@ -42,10 +39,6 @@ public class CubePool : MonoBehaviour
     private void PullOut(Cube cube)
     {
         cube.gameObject.SetActive(true);
-
-        if (cube.TryGetComponent(out Rigidbody rigidbody))
-        {
-            rigidbody.velocity = Vector3.zero;
-        }
+        cube.Rigidbody.velocity = Vector3.zero;
     }
 }

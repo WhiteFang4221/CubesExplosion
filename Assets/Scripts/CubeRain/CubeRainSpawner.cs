@@ -2,13 +2,14 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent (typeof(BoxCollider))]
-public class CubeRain : MonoBehaviour
+public class CubeRainSpawner : MonoBehaviour
 {
     [SerializeField] private CubePool _cubePooler;
     [SerializeField] private Cube _cube;
     
-    private BoxCollider _spawnArea;
     private WaitForSeconds _spawnDelay = new WaitForSeconds(1f);
+    private BoxCollider _spawnArea;
+    private float _dividerSpawnArea = 2;
 
     private void Start()
     {
@@ -29,8 +30,8 @@ public class CubeRain : MonoBehaviour
             Vector3 spawnAreaSize = _spawnArea.size;
             Vector3 spawnAreaCenter = transform.position;
 
-            float randomX = Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2);
-            float randomZ = Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2);
+            float randomX = Random.Range(-spawnAreaSize.x / _dividerSpawnArea, spawnAreaSize.x / _dividerSpawnArea);
+            float randomZ = Random.Range(-spawnAreaSize.z / _dividerSpawnArea, spawnAreaSize.z / _dividerSpawnArea);
             Vector3 spawnPosition = spawnAreaCenter + new Vector3(randomX, 0, randomZ);
 
             Cube cube = _cubePooler.ReturnCubePool().Get();
