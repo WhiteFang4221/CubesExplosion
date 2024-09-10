@@ -1,52 +1,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosionWave : MonoBehaviour
+namespace ExplosionCubes
 {
-    [SerializeField] private float _basedExplosionRadius = 6;
-    [SerializeField] private float _basedExplosionForce = 300;
-    [SerializeField] private CubeSpawner _cubeSpawner;
-
-    private void OnEnable()
+    public class ExplosionWave : MonoBehaviour
     {
-        _cubeSpawner.NewCubesSpawned += PushNewCubes;
-        _cubeSpawner.CubeDisappeared += PushAllCubes;
-    }
+        [SerializeField] private float _basedExplosionRadius = 6;
+        [SerializeField] private float _basedExplosionForce = 300;
+        [SerializeField] private CubeSpawner _cubeSpawner;
 
-    private void OnDisable()
-    {
-        _cubeSpawner.NewCubesSpawned -= PushNewCubes;
-        _cubeSpawner.CubeDisappeared -= PushAllCubes;
-    }
+        //private void OnEnable()
+        //{
+        //    _cubeSpawner.NewCubesSpawned += PushNewCubes;
+        //    _cubeSpawner.CubeDisappeared += PushAllCubes;
+        //}
 
-    private void PushNewCubes(ExplosiveCube explosiveCube, List<Rigidbody> newCubes)
-    {
-        foreach (Rigidbody cube in newCubes)
+        //private void OnDisable()
+        //{
+        //    _cubeSpawner.NewCubesSpawned -= PushNewCubes;
+        //    _cubeSpawner.CubeDisappeared -= PushAllCubes;
+        //}
+
+        private void PushNewCubes(ExplosiveCube explosiveCube, List<Rigidbody> newCubes)
         {
-            cube.AddExplosionForce(_basedExplosionForce, explosiveCube.transform.position, _basedExplosionRadius);
-        }
-    }
-
-    private void PushAllCubes(ExplosiveCube explosiveCube)
-    {
-        float scale = explosiveCube.transform.localScale.magnitude;
-        float ExplosionForce = _basedExplosionForce / scale;
-        float ExplosionRadius = _basedExplosionRadius / scale;
-
-        Collider[] hits = Physics.OverlapSphere(explosiveCube.transform.position, _basedExplosionRadius);
-        List<Rigidbody> cubes = new List<Rigidbody>();
-
-        foreach (Collider hit in hits)
-        {
-            if (hit.attachedRigidbody != null)
+            foreach (Rigidbody cube in newCubes)
             {
-                cubes.Add(hit.attachedRigidbody);
+                cube.AddExplosionForce(_basedExplosionForce, explosiveCube.transform.position, _basedExplosionRadius);
             }
         }
 
-        foreach (Rigidbody cube in cubes)
+        private void PushAllCubes(ExplosiveCube explosiveCube)
         {
-            cube.AddExplosionForce(ExplosionForce, explosiveCube.transform.position, ExplosionRadius);
+            float scale = explosiveCube.transform.localScale.magnitude;
+            float ExplosionForce = _basedExplosionForce / scale;
+            float ExplosionRadius = _basedExplosionRadius / scale;
+
+            Collider[] hits = Physics.OverlapSphere(explosiveCube.transform.position, _basedExplosionRadius);
+            List<Rigidbody> cubes = new List<Rigidbody>();
+
+            foreach (Collider hit in hits)
+            {
+                if (hit.attachedRigidbody != null)
+                {
+                    cubes.Add(hit.attachedRigidbody);
+                }
+            }
+
+            foreach (Rigidbody cube in cubes)
+            {
+                cube.AddExplosionForce(ExplosionForce, explosiveCube.transform.position, ExplosionRadius);
+            }
         }
     }
 }

@@ -3,59 +3,63 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(Camera))]
-public class CubeSpawner : MonoBehaviour
+namespace ExplosionCubes
 {
-    [SerializeField] private ExplosiveCube _cubePrefab;
-    [SerializeField] private CubeSearcher _cubeSearcher;
-   
-    public event Action<ExplosiveCube, List<Rigidbody>> NewCubesSpawned;
-    public event Action<ExplosiveCube> CubeDisappeared;
-
-    private int _minCubes = 2;
-    private int _maxCubes = 7;
-    private float _differenceScaleCubes = 2;
-    private float _maxSplitChance = 101;
-
-    private void OnEnable()
+    [RequireComponent(typeof(Camera))]
+    public class CubeSpawner : MonoBehaviour
     {
-        _cubeSearcher.CubeFounded += TrySpawnCubes;
-    }
+        [SerializeField] private ExplosiveCube _cubePrefab;
+        [SerializeField] private CubeSearcher _cubeSearcher;
 
-    private void OnDisable()
-    {
-        _cubeSearcher.CubeFounded -= TrySpawnCubes;
-    }
+        public event Action<ExplosiveCube, List<Rigidbody>> NewCubesSpawned;
+        public event Action<ExplosiveCube> CubeDisappeared;
 
-    private void CreateNewCubes(ExplosiveCube explosiveCube, float splitChance)
-    {
-        int numberCubes = Random.Range(_minCubes, _maxCubes);
-        List<Rigidbody> cubes = new();
+        private int _minCubes = 2;
+        private int _maxCubes = 7;
+        private float _differenceScaleCubes = 2;
+        private float _maxSplitChance = 101;
 
-        for(int i = 1; i <= numberCubes; i++)
+        private void OnEnable()
         {
-            ExplosiveCube newCube = Instantiate(_cubePrefab, explosiveCube.transform.position, Quaternion.identity);
-            newCube.InitializeSplitChance(splitChance);
-            newCube.transform.localScale = explosiveCube.transform.localScale / _differenceScaleCubes;
-            
-            if (newCube.TryGetComponent(out Rigidbody cubeRigidbody))
+            _cubeSearcher.CubeFounded += TrySpawnCubes;
+        }
+
+        private void OnDisable()
+        {
+            _cubeSearcher.CubeFounded -= TrySpawnCubes;
+        }
+
+        private void CreateNewCubes(ExplosiveCube explosiveCube, float splitChance)
+        {
+            int numberCubes = Random.Range(_minCubes, _maxCubes);
+            List<Rigidbody> cubes = new();
+
+            for (int i = 1; i <= numberCubes; i++)
             {
-                cubes.Add(cubeRigidbody);
-            }
-        }
-            
-        NewCubesSpawned?.Invoke(explosiveCube, cubes);
-    }
+                ExplosiveCube newCube = Instantiate(_cubePrefab, explosiveCube.transform.position, Quaternion.identity);
+                newCube.InitializeSplitChance(splitChance);
+                newCube.transform.localScale = explosiveCube.transform.localScale / _differenceScaleCubes;
 
-    private void TrySpawnCubes(ExplosiveCube explosiveCube)
-    {
-        if (Random.Range(0, _maxSplitChance) <= explosiveCube.SplitChance)
-        {
-            CreateNewCubes(explosiveCube, explosiveCube.SplitChance);
+                if (newCube.TryGetComponent(out Rigidbody cubeRigidbody))
+                {
+                    cubes.Add(cubeRigidbody);
+                }
+            }
+
+            NewCubesSpawned?.Invoke(explosiveCube, cubes);
         }
-        else
+
+        private void TrySpawnCubes(ExplosiveCube explosiveCube)
         {
-            CubeDisappeared?.Invoke(explosiveCube);
+            if (Random.Range(0, _maxSplitChance) <= explosiveCube.SplitChance)
+            {
+                CreateNewCubes(explosiveCube, explosiveCube.SplitChance);
+            }
+            else
+            {
+                CubeDisappeared?.Invoke(explosiveCube);
+            }
         }
     }
 }
+
