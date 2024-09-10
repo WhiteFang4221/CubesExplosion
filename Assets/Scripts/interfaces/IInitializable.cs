@@ -1,4 +1,4 @@
 public interface IInitializable
 {
-    void Initialize(object pooler);
+    void Initialize(object pool);
 }

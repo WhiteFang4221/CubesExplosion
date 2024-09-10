@@ -2,25 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Bomb))]  
-public class ExplosionWave : MonoBehaviour
+public class ExplosionWave : MonoBehaviour, IExplosion
 {
     [SerializeField] private float _explosionRadius = 6;
     [SerializeField] private float _explosionForce = 300;
-    private Bomb _bomb;
 
-    private void Awake()
+    public void ExecuteExplosion(Transform explodePosition)
     {
-        _bomb = GetComponent<Bomb>();
+        PushAllCubes(explodePosition);
     }
-    //private void OnEnable()
-    //{
-    //    _bomb.Exploded += PushAllCubes;
-    //}
-
-    //private void OnDisable()
-    //{
-    //    _bomb.Exploded -= PushAllCubes;
-    //}
 
     private void PushAllCubes(Transform explodePosition)
     {
@@ -40,11 +30,5 @@ public class ExplosionWave : MonoBehaviour
         {
             rigidbody.AddExplosionForce(_explosionForce, explodePosition.transform.position, _explosionRadius);
         }
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(transform.position, _explosionRadius);
     }
 }
