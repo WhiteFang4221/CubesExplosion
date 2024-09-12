@@ -4,17 +4,16 @@ using UnityEngine;
 
 [RequireComponent(typeof(Renderer))]
 [RequireComponent(typeof(Rigidbody))]
-public class Cube : MonoBehaviour, IInitializable
+public class Cube : MonoBehaviour, ISpawnable
 {
     private Renderer _renderComponent;
     private Rigidbody _rigidbody;
-    private CubePool _cubePooler;
     private BombSpawner _bombSpawner;
     private float _minLifeTime = 2f;
     private float _maxLifeTime = 6f;
     private bool _isPlatformTouch = false;
 
-    public event Action<Cube> LifeTimeOver;
+    public event Action<ISpawnable> Destroyed;
 
     private void OnEnable()
     {
@@ -38,11 +37,6 @@ public class Cube : MonoBehaviour, IInitializable
         }
     }
 
-    public void Initialize(object pool)
-    {
-        _cubePooler = (CubePool)pool;
-    }
-
     public void SetBombSpawner(BombSpawner bombSpawner)
     {
         _bombSpawner = bombSpawner;
@@ -53,7 +47,7 @@ public class Cube : MonoBehaviour, IInitializable
         float randomLifetime = UnityEngine.Random.Range(_minLifeTime, _maxLifeTime);
         yield return new WaitForSeconds(randomLifetime);
 
-        LifeTimeOver?.Invoke(this);
+        Destroyed?.Invoke(this);
 
         if (_bombSpawner != null)
         {

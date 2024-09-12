@@ -5,17 +5,18 @@ using UnityEngine;
 public class CubeSearcher : MonoBehaviour
 {
     private Camera _camera;
+    private int _indexLeftMouseButton = 0;
 
     public event Action<ExplosiveCube> CubeFounded;
-    
-    private void Start()
+
+    private void Awake()
     {
         _camera = GetComponent<Camera>();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(_indexLeftMouseButton))
         {
             IdentifyExplosiveCube();
         }
@@ -31,7 +32,6 @@ public class CubeSearcher : MonoBehaviour
            if (hit.collider.TryGetComponent(out ExplosiveCube explosiveCube))
            {
                 CubeFounded?.Invoke(explosiveCube);
-                Debug.Log(explosiveCube.SplitChance);
                 Destroy(explosiveCube.gameObject);
            }
         }

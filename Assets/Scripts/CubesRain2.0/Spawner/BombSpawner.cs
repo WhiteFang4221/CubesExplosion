@@ -1,12 +1,18 @@
-using System;
 using UnityEngine;
 
 public class BombSpawner : Spawner<Bomb>
 {
-    public event Action BombSpawned;
+    private void Awake()
+    {
+        InitializeView();
+    }
+
     public void SpawnBombAtPosition(Transform transform)
     {
-        Bomb createdObject = ObjectPool.Get(transform);
-        BombSpawned?.Invoke();
+        Bomb createdObject = (Bomb)ObjectPool.Get(transform);
+        createdObject.Destroyed += DestroyObject;
+        ViewCount.UpdateSpawned(++SpawnedCount);
+        ViewCount.UpdateInstantiated(ObjectPool.InstantiatedCount);
+        ViewCount.UpdateActive(ObjectPool.ActiveCount);
     }
 }

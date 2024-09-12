@@ -14,7 +14,6 @@ public class ExplosionWave : MonoBehaviour, IExplosion
 
     private void PushAllCubes(Transform explodePosition)
     {
-
         Collider[] hits = Physics.OverlapSphere(explodePosition.transform.position, _explosionRadius);
         List<Rigidbody> rigidbodies = new List<Rigidbody>();
 

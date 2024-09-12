@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,17 +10,14 @@ public class CubeSpawner : Spawner<Cube>
     private WaitForSeconds _spawnDelay = new WaitForSeconds(1f);
     private float _dividerSpawnArea = 2f;
 
-    public event Action CubeSpawned;
-
-
     private void Awake()
     {
         _spawnArea = GetComponent<BoxCollider>();
+        InitializeView();
     }
 
     private void Start()
     {
-        _spawnArea = GetComponent<BoxCollider>();
         StartCoroutine(SpawnCubesCoroutine());
     }
 
@@ -30,27 +26,24 @@ public class CubeSpawner : Spawner<Cube>
         {
             while (true)
             {
-                Vector3 spawnAreaSize = _spawnArea.size;
-                Vector3 spawnAreaCenter = transform.position;
-
-                float randomX = UnityEngine.Random.Range(-spawnAreaSize.x / _dividerSpawnArea, spawnAreaSize.x / _dividerSpawnArea);
-                float randomZ = UnityEngine.Random.Range(-spawnAreaSize.z / _dividerSpawnArea, spawnAreaSize.z / _dividerSpawnArea);
-                Vector3 spawnPosition = spawnAreaCenter + new Vector3(randomX, 0, randomZ);
-
-                Cube cube = ObjectPool.Get(transform);
-                CubeSpawned?.Invoke();
-                cube.LifeTimeOver += ReturnCube;
-                cube.transform.position = spawnPosition;
+                Cube cube = (Cube)ObjectPool.Get(transform);
+                cube.transform.position = GetSpawnArea();
                 cube.SetBombSpawner(_bombSpawner);
-
+                cube.Destroyed += DestroyObject;
+                ViewCount.UpdateSpawned(++SpawnedCount);
+                ViewCount.UpdateInstantiated(ObjectPool.InstantiatedCount);
+                ViewCount.UpdateActive(ObjectPool.ActiveCount);
                 yield return _spawnDelay;
             }
         }
     }
 
-    private void ReturnCube(Cube cube)
+    private Vector3 GetSpawnArea()
     {
-        ObjectPool.Return(cube);
-        cube.LifeTimeOver -= ReturnCube;
+        Vector3 spawnAreaSize = _spawnArea.size;
+        Vector3 spawnAreaCenter = transform.position;
+        float randomX = Random.Range(-spawnAreaSize.x / _dividerSpawnArea, spawnAreaSize.x / _dividerSpawnArea);
+        float randomZ = Random.Range(-spawnAreaSize.z / _dividerSpawnArea, spawnAreaSize.z / _dividerSpawnArea);
+        return spawnAreaCenter + new Vector3(randomX, 0, randomZ);
     }
 }
