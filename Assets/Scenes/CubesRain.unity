@@ -1089,7 +1089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a0ccf09419b8234784e566da32af7f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectPool: {fileID: 2069428961}
+  _objectPool: {fileID: 2069428961}
   _bombSpawner: {fileID: 1991000499}
 --- !u!65 &1245759596
 BoxCollider:
@@ -2071,7 +2071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 500cb077e9a696740a65ac3a94f0f68d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectPool: {fileID: 946879307}
+  _objectPool: {fileID: 946879307}
 --- !u!114 &1991000500
 MonoBehaviour:
   m_ObjectHideFlags: 0

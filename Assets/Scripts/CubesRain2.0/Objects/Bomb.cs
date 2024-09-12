@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(Renderer), typeof(ExplosionWave))]
-public class Bomb : MonoBehaviour, ISpawnable
+public class Bomb : PoolableObject<Bomb>
 {
     private Renderer _renderer;
     private Rigidbody _rigidbody;
@@ -13,8 +13,6 @@ public class Bomb : MonoBehaviour, ISpawnable
     private float _maxLifeTime = 6f;
     private float _randomLifetime;
     private Coroutine _lifeTimeCoroutine;
-
-    public event Action<ISpawnable> Destroyed;
 
     private void Awake()
     {
@@ -33,7 +31,7 @@ public class Bomb : MonoBehaviour, ISpawnable
     private IEnumerator LifeTimeCoroutine()
     {
         yield return (StartCoroutine(FadeOutCoroutine()));
-        Destroyed?.Invoke(this);
+        Disable();
         _explosionWave.ExecuteExplosion(transform);
     }
 

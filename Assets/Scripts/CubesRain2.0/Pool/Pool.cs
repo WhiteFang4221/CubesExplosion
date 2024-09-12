@@ -8,10 +8,9 @@ public abstract class Pool<T> : MonoBehaviour where T : MonoBehaviour
     [SerializeField] private Transform _parentTransform;
     
     private Queue<T> _pool = new Queue<T>();
-    public int ActiveCount { get; private set; } = 0;
-    public int InstantiatedCount { get; private set; } = 0;
+    public ulong InstantiatedCount { get; private set; } = 0;
 
-    public T Get(Transform transform)
+    public T Get(Vector3 vector)
     {
         if (_pool.Count == 0)
         {
@@ -20,8 +19,7 @@ public abstract class Pool<T> : MonoBehaviour where T : MonoBehaviour
 
         T entity = _pool.Dequeue();
         entity.gameObject.SetActive(true);
-        ActiveCount++;
-        entity.transform.position = transform.position;
+        entity.transform.position = vector;
 
         return entity;
     }
@@ -29,7 +27,6 @@ public abstract class Pool<T> : MonoBehaviour where T : MonoBehaviour
     public void Return(T entity)
     {
         entity.gameObject.SetActive(false);
-        ActiveCount--;
         _pool.Enqueue(entity);
     }
 

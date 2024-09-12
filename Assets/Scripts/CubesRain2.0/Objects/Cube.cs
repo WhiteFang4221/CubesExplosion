@@ -4,16 +4,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(Renderer))]
 [RequireComponent(typeof(Rigidbody))]
-public class Cube : MonoBehaviour, ISpawnable
+public class Cube : PoolableObject<Cube>
 {
     private Renderer _renderComponent;
     private Rigidbody _rigidbody;
-    private BombSpawner _bombSpawner;
     private float _minLifeTime = 2f;
     private float _maxLifeTime = 6f;
     private bool _isPlatformTouch = false;
-
-    public event Action<ISpawnable> Destroyed;
 
     private void OnEnable()
     {
@@ -29,7 +26,7 @@ public class Cube : MonoBehaviour, ISpawnable
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent(out Platform platform) && _isPlatformTouch == false)
+        if (_isPlatformTouch == false && collision.gameObject.TryGetComponent(out Platform platform))
         {
             _isPlatformTouch = true;
             _renderComponent.material.color = UnityEngine.Random.ColorHSV();
@@ -37,23 +34,12 @@ public class Cube : MonoBehaviour, ISpawnable
         }
     }
 
-    public void SetBombSpawner(BombSpawner bombSpawner)
-    {
-        _bombSpawner = bombSpawner;
-    }
-
     private IEnumerator DestroyAfterDelay()
     {
         float randomLifetime = UnityEngine.Random.Range(_minLifeTime, _maxLifeTime);
         yield return new WaitForSeconds(randomLifetime);
 
-        Destroyed?.Invoke(this);
-
-        if (_bombSpawner != null)
-        {
-            _bombSpawner.SpawnBombAtPosition(transform);
-        }
-
+        Disable();
         _renderComponent.material.color = Color.white;
     }
 }

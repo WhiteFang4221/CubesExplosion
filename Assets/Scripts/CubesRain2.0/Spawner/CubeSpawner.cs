@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -10,10 +11,11 @@ public class CubeSpawner : Spawner<Cube>
     private WaitForSeconds _spawnDelay = new WaitForSeconds(1f);
     private float _dividerSpawnArea = 2f;
 
-    private void Awake()
+    public event Action<BombSpawner> CubeSpawned;
+
+    protected void Awake()
     {
         _spawnArea = GetComponent<BoxCollider>();
-        InitializeView();
     }
 
     private void Start()
@@ -23,27 +25,25 @@ public class CubeSpawner : Spawner<Cube>
 
     private IEnumerator SpawnCubesCoroutine()
     {
+        while (true)
         {
-            while (true)
-            {
-                Cube cube = (Cube)ObjectPool.Get(transform);
-                cube.transform.position = GetSpawnArea();
-                cube.SetBombSpawner(_bombSpawner);
-                cube.Destroyed += DestroyObject;
-                ViewCount.UpdateSpawned(++SpawnedCount);
-                ViewCount.UpdateInstantiated(ObjectPool.InstantiatedCount);
-                ViewCount.UpdateActive(ObjectPool.ActiveCount);
-                yield return _spawnDelay;
-            }
+            SpawnObject(GetSpawnArea());
+            CubeSpawned?.Invoke(_bombSpawner);
+            yield return _spawnDelay;
         }
+    }
+
+    protected override void OnObjectRelease(Cube obj)
+    {
+        _bombSpawner.SpawnObject(obj.transform.position);
     }
 
     private Vector3 GetSpawnArea()
     {
         Vector3 spawnAreaSize = _spawnArea.size;
         Vector3 spawnAreaCenter = transform.position;
-        float randomX = Random.Range(-spawnAreaSize.x / _dividerSpawnArea, spawnAreaSize.x / _dividerSpawnArea);
-        float randomZ = Random.Range(-spawnAreaSize.z / _dividerSpawnArea, spawnAreaSize.z / _dividerSpawnArea);
+        float randomX = UnityEngine.Random.Range(-spawnAreaSize.x / _dividerSpawnArea, spawnAreaSize.x / _dividerSpawnArea);
+        float randomZ = UnityEngine.Random.Range(-spawnAreaSize.z / _dividerSpawnArea, spawnAreaSize.z / _dividerSpawnArea);
         return spawnAreaCenter + new Vector3(randomX, 0, randomZ);
     }
 }
